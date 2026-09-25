@@ -6,14 +6,23 @@ acuity, contrast, color-matching, and satisfaction-survey tasks for view-clarity
 ## Files
 - `ASHRAE_experiment_run.py` — runnable experiment application
 - `ASHRAE experiment code.ipynb` — notebook version (kept in sync with the `.py`)
+- `Setup.bat` — one-time Windows setup (installs Python packages, offers to install Python)
 - `Run Experiment.bat` — double-click launcher (runs the `.py`)
+- `SETUP_INSTRUCTIONS.md` — step-by-step guide for non-technical users (students)
 
-## Running
+## Running (Windows — for study operators / students)
+See **`SETUP_INSTRUCTIONS.md`** for the full step-by-step guide. Short version:
+1. Double-click **`Setup.bat`** once (installs everything needed).
+2. Double-click **`Run Experiment.bat`** to start.
+
+On the start screen, choose **Practice (Demo)** to rehearse without touching real data.
+
+## Running (manual / other platforms)
 ```bash
 python "ASHRAE_experiment_run.py"
 ```
-Or double-click `Run Experiment.bat`. On the start screen, choose **Practice (Demo)**
-to rehearse without touching real data.
+Note: the app uses Windows-only display APIs; the Color stage and calibration are
+Windows-specific.
 
 ## Notes
 - Requires Python 3 with `openpyxl` installed (`pip install openpyxl`).
