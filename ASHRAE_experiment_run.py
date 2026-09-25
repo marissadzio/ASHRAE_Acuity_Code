@@ -140,7 +140,11 @@ DOWNLOADS_DIR = Path.home() / "Downloads"
 SHEET = "participants"
 
 # ===== Experiment design file =====
-DESIGN_XLSX_PATH = Path(r"C:\Users\maris\Documents\sunwoo\final_material_sequence_AorC.xlsx")
+# The design/sequence spreadsheet must live in the SAME folder as this program.
+# It ships with the project download, right next to this .py and the .bat files,
+# so this resolves correctly on any machine (no hard-coded C:\Users\... path).
+DESIGN_XLSX_NAME = "final_material_sequence_AorC.xlsx"
+DESIGN_XLSX_PATH = Path(__file__).resolve().with_name(DESIGN_XLSX_NAME)
 DESIGN_SHEET = "Full sequence"
 DESIGN_PARTICIPANT_COL = "Participant"
 DESIGN_SEQUENCE_COL = "Full sequence"
@@ -774,14 +778,40 @@ def _normalize_email(local_or_email):
     return local_or_email + DOMAIN
 
 
+def _design_file_missing_message():
+    """A plain-language 'how to fix it' message for non-technical operators."""
+    return (
+        "Could not find the experiment design file:\n\n"
+        f"    {DESIGN_XLSX_NAME}\n\n"
+        "This file must be in the SAME folder as the program.\n"
+        "The program looked here:\n\n"
+        f"    {DESIGN_XLSX_PATH.parent}\n\n"
+        "HOW TO FIX:\n"
+        f"  1. Make sure '{DESIGN_XLSX_NAME}' is in the folder shown\n"
+        "     above, right next to 'Run Experiment.bat'.\n"
+        "  2. This file normally downloads with the rest of the project.\n"
+        "     If it is missing, re-download the project (see\n"
+        "     SETUP_INSTRUCTIONS.md) or ask the study coordinator for it.\n"
+        "  3. Do not rename the file.\n\n"
+        "TIP: You can still use 'Practice (Demo)' on the start screen\n"
+        "without this file."
+    )
+
+
 def _read_full_sequence_from_design(participant_id_value):
     """Read one participant's Full sequence from the Excel design file."""
     if not DESIGN_XLSX_PATH.exists():
-        raise FileNotFoundError(f"Design file not found:\n{DESIGN_XLSX_PATH}")
+        raise FileNotFoundError(_design_file_missing_message())
 
     wb = load_workbook(DESIGN_XLSX_PATH, data_only=True)
     if DESIGN_SHEET not in wb.sheetnames:
-        raise ValueError(f"Sheet '{DESIGN_SHEET}' was not found in:\n{DESIGN_XLSX_PATH}")
+        raise ValueError(
+            f"The design file '{DESIGN_XLSX_NAME}' is missing the required sheet "
+            f"named '{DESIGN_SHEET}'.\n\n"
+            "HOW TO FIX: make sure you are using the correct, unmodified design\n"
+            "file from the project (do not rename its sheets), or ask the study\n"
+            "coordinator for a fresh copy."
+        )
 
     ws = wb[DESIGN_SHEET]
     headers = [ws.cell(1, c).value for c in range(1, ws.max_column + 1)]
