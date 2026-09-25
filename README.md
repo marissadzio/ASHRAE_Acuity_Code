@@ -14,6 +14,8 @@ acuity, contrast, color-matching, and satisfaction-survey tasks for view-clarity
 - `Setup.bat` — one-time Windows setup (installs Python packages, offers to install Python)
 - `Run Experiment.bat` — double-click launcher (runs the `.py`)
 - `SETUP_INSTRUCTIONS.md` — step-by-step guide for non-technical users (students)
+- `final_material_sequence_AorC.xlsx` — randomization / balanced design sequence (the
+  per-participant `Full sequence` the app reads; participants are numeric IDs only)
 
 ## Running (Windows — for study operators / students)
 See **`SETUP_INSTRUCTIONS.md`** for the full step-by-step guide. Short version:
@@ -33,5 +35,6 @@ Windows-specific.
 - Requires Python 3 with `openpyxl` installed (`pip install openpyxl`).
 - The app is calibrated for a specific display (physical PPI and viewing distance);
   verify the calibration on your monitor before collecting real data.
-- The per-participant design/sequence spreadsheet and results files are **not** included
-  in this repo (they contain participant data).
+- The randomization/design sequence spreadsheet (`final_material_sequence_AorC.xlsx`) is
+  included. Per-participant **results** files (`participant_*_results.xlsx`) are **not**
+  committed — they hold collected data and are ignored by `.gitignore`.
