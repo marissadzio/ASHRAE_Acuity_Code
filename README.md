@@ -3,6 +3,11 @@
 Visual experiment application for ASHRAE 1925-TRP — a calibrated Tkinter app that runs
 acuity, contrast, color-matching, and satisfaction-survey tasks for view-clarity research.
 
+> 👉 **Setting this up on a Windows laptop? Start here:
+> [SETUP_INSTRUCTIONS.md](SETUP_INSTRUCTIONS.md)** — a step-by-step guide (download,
+> install, run) written for non-technical users. Short version: double-click
+> **`Setup.bat`** once, then double-click **`Run Experiment.bat`**.
+
 ## Files
 - `ASHRAE_experiment_run.py` — runnable experiment application
 - `ASHRAE experiment code.ipynb` — notebook version (kept in sync with the `.py`)
