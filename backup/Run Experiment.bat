@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 title ASHRAE 1925-TRP Visual Experiment
 REM ============================================================
-REM  ASHRAE 1925-TRP Visual Experiment (v2) - double-click launcher
+REM  ASHRAE 1925-TRP Visual Experiment - double-click launcher
 REM  Runs the experiment. Choose "Practice (Demo)" on the start
 REM  screen to rehearse without touching real data.
 REM
@@ -29,7 +29,7 @@ if not defined PYCMD (
     exit /b 1
 )
 
-%PYCMD% "v2ASHRAE.py"
+%PYCMD% "ASHRAE_experiment_run.py"
 if !errorlevel! neq 0 (
     echo.
     echo  The experiment exited with an error. Details are above.
