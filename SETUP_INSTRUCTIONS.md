@@ -1,7 +1,7 @@
 # How to Set Up and Run the Experiment (Windows)
 
 This guide is for **Windows laptops**. Follow it top to bottom. You only do
-**Part 1 – 3 once** per laptop. After that, you just double-click one file to run
+**Parts 1 – 3 once** per laptop. After that, you just double-click one file to run
 the experiment.
 
 > ⏱️ First-time setup takes about 10–15 minutes, mostly waiting for downloads.
@@ -76,7 +76,38 @@ is recommended if you're not comfortable with computers. Option B uses Git.
 
 ---
 
-## Part 3 — Run the experiment
+## Part 3 — Add the Ishihara images (run once)
+
+Before each real session, the experiment runs a quick eye screening that shows two
+**Ishihara color-vision plates**: circles of colored dots with a number hidden inside.
+These two image files **do not come with the download**, so you have to add them.
+
+1. Get the two image files from the **study coordinator**:
+   - **`Ishihara_23`** (the hidden number is **42**)
+   - **`Ishihara_11`** (the hidden number is **6**)
+2. Open the project folder (from Part 1) and open the folder named **`ishihara`**
+   inside it.
+3. **Copy both image files into the `ishihara` folder.** When you're done it should
+   look like this:
+   ```
+   ASHRAE_Acuity_Code-main
+   ├── Run Experiment.bat
+   ├── Setup.bat
+   ├── v2ASHRAE.py
+   └── ishihara
+       ├── Ishihara_23.png
+       └── Ishihara_11.png
+   ```
+
+> ⚠️ **Don't rename the files.** The names must be exactly `Ishihara_23` and
+> `Ishihara_11`. The ending can be `.png`, `.jpg`, `.jpeg`, or `.bmp`, whichever
+> the coordinator gives you.
+>
+> ⚠️ Put them in the **`ishihara`** folder, not loose in the main project folder.
+
+---
+
+## Part 4 — Run the experiment
 
 1. In the project folder, find **`Run Experiment.bat`**.
 2. **Double-click `Run Experiment.bat`.**
@@ -116,6 +147,13 @@ Real-session results are saved automatically to your **Downloads** folder as
   Right-click it → **Run as administrator**. If it still closes instantly, right-
   click → **Edit** is *not* what you want; instead take a photo of any message and
   send it to the coordinator.
+- **Windows says it "only runs Microsoft-verified apps," or `.bat` files do
+  absolutely nothing.** → The laptop is in **S Mode**, which blocks these files.
+  Switch out of S Mode (it's free): **Settings → System → Activation → Switch out of
+  S mode** (opens the Microsoft Store) → **Get**. Then try again.
+- **The Ishihara screening shows a blank or missing picture.** → The images aren't
+  in the right place. Check **Part 3**: both files must be inside the `ishihara`
+  folder, named exactly `Ishihara_23` and `Ishihara_11`.
 - **Windows SmartScreen says "Windows protected your PC."** → Click **More info**
   → **Run anyway**. (These are simple, safe scripts from your study.)
 - **The on-screen sizes look wrong for a real session.** → The experiment is
