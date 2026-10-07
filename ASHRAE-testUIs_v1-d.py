@@ -2608,12 +2608,103 @@ def _show_screening_intro(parent):
     return nav["result"]
 
 
+ANSWER_ARROW_GLYPHS = {"up": "↑", "down": "↓", "left": "←", "right": "→"}
+
+
+def draw_answer_arrows(canvas_, highlight=None):
+    """Four answer arrows (up/down/left/right) on the laptop; `highlight` lights one up."""
+    canvas_.delete("answer_arrows")
+    canvas_.update_idletasks()
+    W = max(10, canvas_.winfo_width())
+    H = max(10, canvas_.winfo_height())
+    b = int(min(W, H) * 0.20)  # arrow box size; the whole cross is 3.3 boxes tall/wide
+    d = int(b * 1.15)
+    cx, cy = W / 2.0, H / 2.0
+    positions = {"up": (cx, cy - d), "down": (cx, cy + d), "left": (cx - d, cy), "right": (cx + d, cy)}
+    for key, (x, y) in positions.items():
+        canvas_.create_rectangle(x - b / 2, y - b / 2, x + b / 2, y + b / 2,
+                                 fill=ARROW_HILITE if key == highlight else "white",
+                                 outline="black", width=4, tags=("answer_arrows",))
+        canvas_.create_text(x, y, text=ANSWER_ARROW_GLYPHS[key], font=("Segoe UI", -int(b * 0.6), "bold"),
+                            fill="black", tags=("answer_arrows",))
+
+
+# The screening runs before the rest of the program is loaded, so it has its own small
+# helpers for switching the screens (the test pages use ensure_two_screens later on).
+def _run_event_loop_until(parent, condition, timeout_ms):
+    """Keep the UI responsive until condition() is true or the timeout passes."""
+    finished = tk.BooleanVar(master=parent, value=False)
+    outcome = {"ok": False}
+    deadline = time.monotonic() + timeout_ms / 1000.0
+
+    def poll():
+        if condition():
+            outcome["ok"] = True
+            finished.set(True)
+        elif time.monotonic() > deadline:
+            finished.set(True)
+        else:
+            parent.after(100, poll)
+
+    parent.after(100, poll)
+    parent.wait_variable(finished)
+    return outcome["ok"]
+
+
+def _screening_wait_message(text):
+    canvas.delete("display_wait")
+    if text:
+        canvas.update_idletasks()
+        W = max(10, canvas.winfo_width())
+        H = max(10, canvas.winfo_height())
+        canvas.create_text(W / 2, H * 0.45, text=text, font=("Segoe UI", 26, "bold"),
+                           fill="black", tags=("display_wait",))
+        canvas.update_idletasks()
+
+
+def _screening_to_two_screens(parent):
+    """Switch to Extend for the acuity screening. Returns (tv, laptop), or None."""
+    if not (ACUITY_TWO_SCREENS and sys.platform == "win32") or active_display_count() < 2:
+        return None
+    _screening_wait_message("Setting up the TV and laptop screens  (please wait)")
+    request_display_mode("extend")
+    ok = _run_event_loop_until(parent, lambda: len(list_monitors()) >= 2, DISPLAY_SWITCH_TIMEOUT_MS)
+    if ok:
+        settle_until = time.monotonic() + DISPLAY_SWITCH_SETTLE_MS / 1000.0
+        _run_event_loop_until(parent, lambda: time.monotonic() >= settle_until, DISPLAY_SWITCH_SETTLE_MS + 500)
+    _screening_wait_message("")
+    screens = find_color_screens() if ok else None
+    if screens is None:
+        _screening_to_one_screen(parent)
+    return screens
+
+
+def _screening_to_one_screen(parent):
+    """Back to Duplicate after the acuity screening."""
+    _screening_wait_message("Returning to the main screen  (please wait)")
+    request_display_mode("clone")
+    if _run_event_loop_until(parent, lambda: len(list_monitors()) <= 1, DISPLAY_SWITCH_TIMEOUT_MS):
+        settle_until = time.monotonic() + DISPLAY_SWITCH_SETTLE_MS / 1000.0
+        _run_event_loop_until(parent, lambda: time.monotonic() >= settle_until, DISPLAY_SWITCH_SETTLE_MS + 500)
+    _screening_wait_message("")
+    try:
+        root.attributes("-fullscreen", True)
+        root.lift()
+    except Exception:
+        pass
+
+
 def _run_20_20_screening(parent):
     """Two Landolt-C presentations at 20/SCREENING_ACUITY_DENOMINATOR; show feedback after each.
+
+    With the TV connected, the C (and the Correct / Incorrect feedback) is shown only
+    on the TV, and the laptop shows four answer arrows.
 
     Returns (nav, correct, passed). correct/passed are None when the page was
     left with Alt+Left / Alt+Right before both presentations were answered.
     """
+    screens = _screening_to_two_screens(parent)
+
     dialog = tk.Toplevel(parent)
     dialog.title(f"Screening - 20/{SCREENING_ACUITY_DENOMINATOR} Visual Acuity")
     dialog.configure(bg=BG_SOFT)
@@ -2641,6 +2732,29 @@ def _run_20_20_screening(parent):
     c = tk.Canvas(dialog, bg=BG_SOFT, highlightthickness=0)
     c.pack(fill="both", expand=True)
 
+    # Two screens: a borderless window covering the TV shows the C and the feedback;
+    # the laptop (this dialog) shows the answer arrows. One screen: all on `c`.
+    tv_win = None
+    stim = c
+    if screens is not None:
+        r = screens[0]["rect"]
+        tv_w, tv_h = r.right - r.left, r.bottom - r.top
+        tv_win = tk.Toplevel(parent)
+        tv_win.overrideredirect(True)  # Tk "-fullscreen" would land on the laptop, not the TV
+        tv_win.configure(bg=BG_SOFT)
+        tv_win.geometry(f"{tv_w}x{tv_h}+{r.left}+{r.top}")
+        stim = tk.Canvas(tv_win, bg=BG_SOFT, highlightthickness=0, width=tv_w, height=tv_h)
+        stim.pack(fill="both", expand=True)
+        tv_win.attributes("-topmost", True)
+        tv_win.update_idletasks()
+        dialog.after(150, lambda: dialog.winfo_exists() and dialog.focus_force())  # keys go to this page
+
+    def flash_arrow_on_laptop(direction):
+        if screens is None:
+            return
+        draw_answer_arrows(c, highlight=direction)
+        dialog.after(220, lambda: dialog.winfo_exists() and draw_answer_arrows(c))
+
     state = {"trial": 0, "correct": 0, "orientation": None, "done": False}
 
     def draw_trial():
@@ -2666,16 +2780,21 @@ def _run_20_20_screening(parent):
         state["orientation"] = random.choice(SCREENING_ORIENTATIONS)
         progress.set(f"Trial {state['trial'] + 1} / {SCREENING_ACUITY_TRIALS}")
         dpi = get_dpi_for_window(dialog.winfo_id())
-        draw_landolt_c(c, dpi, VIEWING_DISTANCE_M, SCREENING_ACUITY_DENOMINATOR, state["orientation"])
+        draw_landolt_c(stim, dpi, VIEWING_DISTANCE_M, SCREENING_ACUITY_DENOMINATOR, state["orientation"])
+        if screens is not None:
+            draw_answer_arrows(c)
 
     feedback_active = {"value": False}
 
     def show_feedback(is_correct):
         feedback_active["value"] = True
-        c.delete("all")
-        c.create_text(
-            c.winfo_width() / 2,
-            c.winfo_height() / 2,
+        stim.delete("all")
+        stim.update_idletasks()
+        sw = stim.winfo_width() if stim.winfo_width() > 1 else stim.winfo_reqwidth()
+        sh = stim.winfo_height() if stim.winfo_height() > 1 else stim.winfo_reqheight()
+        stim.create_text(
+            sw / 2,
+            sh / 2,
             text="Correct" if is_correct else "Incorrect",
             font=("Segoe UI", 54, "bold"),
             fill="black",
@@ -2706,6 +2825,7 @@ def _run_20_20_screening(parent):
         if event.keysym not in SCREENING_KEYSYM_TO_ORIENTATION:
             return None
         ans = SCREENING_KEYSYM_TO_ORIENTATION[event.keysym]
+        flash_arrow_on_laptop(ans)
         is_correct = (ans == state["orientation"])
         if is_correct:
             state["correct"] += 1
@@ -2728,6 +2848,13 @@ def _run_20_20_screening(parent):
     dialog.after(200, draw_trial)
     parent.wait_window(dialog)
     clear_nav_page()
+
+    if tv_win is not None:
+        try:
+            tv_win.destroy()
+        except Exception:
+            pass
+        _screening_to_one_screen(parent)  # back to Duplicate for the Ishihara plates
 
     if nav["result"] is not None:
         return nav["result"], None, None
@@ -3662,25 +3789,9 @@ def stimulus_canvas():
 
 # ----- Two-screen acuity: Landolt C on the TV, answer arrows on the laptop -----
 _acuity_start_token = 0  # stops a delayed start if the page was left while switching
-_LAPTOP_ARROW_GLYPHS = {"up": "↑", "down": "↓", "left": "←", "right": "→"}
-
-
 def draw_laptop_arrows(highlight=None):
     """Four answer arrows on the laptop; `highlight` lights up the one just pressed."""
-    canvas.delete("laptop_arrows")
-    canvas.update_idletasks()
-    W = max(10, canvas.winfo_width())
-    H = max(10, canvas.winfo_height())
-    b = int(min(W, H) * 0.20)  # arrow box size; the whole cross is 3.3 boxes tall/wide
-    d = int(b * 1.15)
-    cx, cy = W / 2.0, H / 2.0
-    positions = {"up": (cx, cy - d), "down": (cx, cy + d), "left": (cx - d, cy), "right": (cx + d, cy)}
-    for key, (x, y) in positions.items():
-        canvas.create_rectangle(x - b / 2, y - b / 2, x + b / 2, y + b / 2,
-                                fill=ARROW_HILITE if key == highlight else "white",
-                                outline="black", width=4, tags=("laptop_arrows",))
-        canvas.create_text(x, y, text=_LAPTOP_ARROW_GLYPHS[key], font=("Segoe UI", -int(b * 0.6), "bold"),
-                           fill="black", tags=("laptop_arrows",))
+    draw_answer_arrows(canvas, highlight)
 
 
 def flash_laptop_arrow(direction, ms=220):

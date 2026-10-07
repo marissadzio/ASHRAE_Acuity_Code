@@ -87,9 +87,9 @@ through the window being tested. The laptop connects to the TV with an **HDMI ca
    size is slightly too big.
 3. That's all: the program switches the screens by itself (you don't need Win+P).
 
-> 💡 **What you'll see:** the laptop and TV show the **same picture** for the screening,
-> instructions and survey. During **acuity, contrast and color matching** the screens
-> **split**: the test is shown **only on the TV** and the answer screen (arrows, typed
+> 💡 **What you'll see:** the laptop and TV show the **same picture** for the instructions,
+> the Ishihara plates and the survey. During the **20/40 eye screening, acuity, contrast and
+> color matching** the screens **split**: the test is shown **only on the TV** and the answer screen (arrows, typed
 > letters, color wheel) **only on the laptop**. Switching takes a few seconds and the
 > screens may flicker; that's normal.
 >

@@ -25,8 +25,10 @@ The participant sits **3.048 m (10 ft)** from a **SYLVOX 32" 1080p outdoor TV**,
 view through the glazing being tested. The researcher runs the program on a Windows laptop
 connected to the TV by HDMI.
 
-- **Screening, instructions, illuminance entry and the survey** use **Duplicate** mode (the
-  laptop and TV show the same picture). The program switches to Duplicate by itself.
+- **Instructions, illuminance entry, the Ishihara plates and the survey** use **Duplicate**
+  mode (the laptop and TV show the same picture). The program switches to Duplicate by itself.
+- **The 20/40 acuity screening** splits the screens: the C (and Correct / Incorrect) only on
+  the TV, four answer arrows on the laptop.
 - **Acuity, contrast and color matching** use **Extend** mode, switched automatically when
   acuity starts and back to Duplicate before the survey:
   - **Acuity:** the Landolt C only on the TV; four answer arrows on the laptop.
