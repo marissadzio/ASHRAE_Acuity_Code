@@ -1,7 +1,7 @@
 # How to Set Up and Run the Experiment (Windows)
 
 This guide is for **Windows laptops**. Follow it top to bottom. You only do
-**Parts 1 – 3 once** per laptop. After that, you just double-click one file to run
+**Parts 1 – 2 once** per laptop. After that, you just double-click one file to run
 the experiment.
 
 > ⏱️ First-time setup takes about 10–15 minutes, mostly waiting for downloads.
@@ -76,58 +76,53 @@ is recommended if you're not comfortable with computers. Option B uses Git.
 
 ---
 
-## Part 3 — Add the Ishihara images (run once)
+## Part 3 — Connect the TV (each session)
 
-Before each real session, the experiment runs a quick eye screening that shows two
-**Ishihara color-vision plates**: circles of colored dots with a number hidden inside.
-These two image files **do not come with the download**, so you have to add them.
+The participant sits **10 ft (3.048 m)** from the **SYLVOX 32" TV** and looks at it
+through the window being tested. The laptop connects to the TV with an **HDMI cable**.
 
-1. Get the two image files from the **study coordinator**:
-   - **`Ishihara_23`** (the hidden number is **42**)
-   - **`Ishihara_11`** (the hidden number is **6**)
-2. Open the project folder (from Part 1) and open the folder named **`ishihara`**
-   inside it.
-3. **Copy both image files into the `ishihara` folder.** When you're done it should
-   look like this:
-   ```
-   ASHRAE_Acuity_Code-main
-   ├── Run Experiment.bat
-   ├── Setup.bat
-   ├── v2ASHRAE.py
-   └── ishihara
-       ├── Ishihara_23.png
-       └── Ishihara_11.png
-   ```
+1. Plug the HDMI cable into the laptop and the TV, and set the TV to that HDMI input.
+2. On the TV's remote, set the **picture size** to **"Just Scan"**, **"Screen Fit"** or
+   **"1:1"** (not "Zoom" or "16:9 wide"). Otherwise the TV cuts off the edges and every
+   size is slightly too big.
+3. That's all: the program switches the screens by itself (you don't need Win+P).
 
-> ⚠️ **Don't rename the files.** The names must be exactly `Ishihara_23` and
-> `Ishihara_11`. The ending can be `.png`, `.jpg`, `.jpeg`, or `.bmp`, whichever
-> the coordinator gives you.
+> 💡 **What you'll see:** the laptop and TV show the **same picture** for the screening,
+> instructions and survey. During **acuity, contrast and color matching** the screens
+> **split**: the test is shown **only on the TV** and the answer screen (arrows, typed
+> letters, color wheel) **only on the laptop**. Switching takes a few seconds and the
+> screens may flicker; that's normal.
 >
-> ⚠️ Put them in the **`ishihara`** folder, not loose in the main project folder.
+> ✅ The Ishihara plate images used in the screening already come with the download
+> (in the `ishihara` folder). Don't rename or move them.
 
 ---
 
 ## Part 4 — Run the experiment
 
-1. In the project folder, find **`Run Experiment.bat`**.
-2. **Double-click `Run Experiment.bat`.**
+1. Connect the TV first (Part 3).
+2. In the project folder, **double-click `Run Experiment.bat`**.
 3. The experiment's start screen appears. Choose:
    - **Practice (Demo)** — to rehearse. Nothing is saved as real data.
    - **Start Real Session** — for an actual participant (needs the participant's
-     ID and the study's design file; the coordinator sets this up).
-4. Follow the on-screen prompts.
+     ID; the coordinator gives you this).
+4. Follow the on-screen prompts. Popups will remind you to **hide the laptop screen**
+   before each survey and to **put the laptop back on the table** after it.
 
 ### The controls (shown on the start screen too)
 
-| Stage      | What to press                                               |
-|------------|------------------------------------------------------------|
-| Acuity     | **Arrow keys** ← ↑ → ↓ = the direction of the gap          |
-| Contrast   | **Type the 3 letters** (A–Z). **Backspace** clears them.   |
-| Color      | **Click / drag** on the color wheel, then **Enter**        |
-| Survey     | **← / →** to move the choice, then **Enter** to confirm    |
-| Skip one   | **Tab** = skip just the current item                       |
-| Skip task  | **Esc** = skip the whole current task (never quits)        |
-| **Quit**   | Click the window's **✕ / Exit** button (this ends the run) |
+| Stage      | What to press                                                        |
+|------------|---------------------------------------------------------------------|
+| Acuity     | **Arrow keys** ← ↑ → ↓ = the direction of the gap                   |
+| Contrast   | **Type the 3 letters** (A–Z). **Backspace** clears them. **Enter** submits if fewer than 3 are visible. |
+| Color      | **Click / drag** on the color wheel, then **Enter**                 |
+| Survey     | **← / →** to move the choice, then **Enter** to confirm             |
+| Pages      | **Alt+←** = previous page, **Alt+→** = next page (any screen)       |
+| Skip one   | **F2** = skip just the current item                                 |
+| Skip task  | **Esc** = skip the whole current task (asks first; never quits)     |
+| **Quit**   | Click the window's **✕ / Exit** button (saves, then ends the run)   |
+
+The **Sun position** box accepts a number or **NA**.
 
 ### Where the results go
 
@@ -151,14 +146,18 @@ Real-session results are saved automatically to your **Downloads** folder as
   absolutely nothing.** → The laptop is in **S Mode**, which blocks these files.
   Switch out of S Mode (it's free): **Settings → System → Activation → Switch out of
   S mode** (opens the Microsoft Store) → **Get**. Then try again.
-- **The Ishihara screening shows a blank or missing picture.** → The images aren't
-  in the right place. Check **Part 3**: both files must be inside the `ishihara`
-  folder, named exactly `Ishihara_23` and `Ishihara_11`.
+- **The Ishihara screening shows a blank or missing picture.** → The images were
+  moved or renamed. Both files must be inside the `ishihara` folder, named exactly
+  `Ishihara_23.png` and `Ishihara_11.png`. Re-download the project if they're missing.
+- **The screens don't split during the tests (everything stays on the laptop).** →
+  Check the HDMI cable and that the TV is on the right input, then restart the
+  experiment. Without a TV connected, the program runs everything on one screen.
 - **Windows SmartScreen says "Windows protected your PC."** → Click **More info**
   → **Run anyway**. (These are simple, safe scripts from your study.)
 - **The on-screen sizes look wrong for a real session.** → The experiment is
-  calibrated for a specific monitor and viewing distance. Only collect real data
-  on the coordinator-approved setup. Demo mode is fine on any laptop.
+  calibrated for the SYLVOX 32" TV at 10 ft. Check the TV's picture size setting
+  (Part 3). With a ruler, the first acuity "C" on the TV should be about **71 mm**
+  across. Only collect real data on the coordinator-approved setup.
 
 ---
 

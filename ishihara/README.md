@@ -1,12 +1,11 @@
 # Ishihara plate images
 
-Put the two Ishihara color-vision plate images in **this folder**:
+The two Ishihara color-vision plates used in the pre-session screening:
 
-| File name       | Correct answer |
-|-----------------|----------------|
-| `Ishihara_23`   | 42             |
-| `Ishihara_11`   | 6              |
+| File name         | Correct answer |
+|-------------------|----------------|
+| `Ishihara_23.png` | 42             |
+| `Ishihara_11.png` | 6              |
 
-- The extension can be `.png`, `.jpg`, `.jpeg`, or `.bmp` (e.g. `Ishihara_23.png`).
 - Keep the file names exactly as shown; the program looks them up by name.
-- The images are not included in the repo. Get them from the study coordinator.
+- The extension can also be `.jpg`, `.jpeg`, or `.bmp` if the images are replaced.
