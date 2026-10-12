@@ -88,7 +88,7 @@ through the window being tested. The laptop connects to the TV with an **HDMI ca
 3. That's all: the program switches the screens by itself (you don't need Win+P).
 
 > 💡 **What you'll see:** the laptop and TV show the **same picture** for the instructions,
-> the Ishihara plates and the survey. During the **20/40 eye screening, acuity, contrast and
+> the Ishihara plates and the survey. During the **20/20 eye screening, acuity, contrast and
 > color matching** the screens **split**: the test is shown **only on the TV** and the answer screen (arrows, typed
 > letters, color wheel) **only on the laptop**. Switching takes a few seconds and the
 > screens may flicker; that's normal.

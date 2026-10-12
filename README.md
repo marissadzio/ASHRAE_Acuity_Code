@@ -10,15 +10,16 @@ tasks for view-clarity research.
 > ZIP, extract it, double-click **`Setup.bat`** once, then double-click **`Run Experiment.bat`**.
 
 ## Files
-- `ASHRAE-testUIs_v1-d.py` — the experiment program (current version)
-- `ASHRAE-testUIs_v1-d.ipynb` — notebook version (kept identical to the `.py`)
-- `Run Experiment.bat` — double-click launcher (runs `ASHRAE-testUIs_v1-d.py`)
+- `ASHRAE-testUIs_v2-d.py` — the experiment program (current version)
+- `ASHRAE-testUIs_v2-d.ipynb` — notebook version (the `.py` is made from its code cell)
+- `Run Experiment.bat` — double-click launcher (runs `ASHRAE-testUIs_v2-d.py`)
 - `Setup.bat` — one-time Windows setup (installs Python packages, offers to install Python)
 - `SETUP_INSTRUCTIONS.md` — step-by-step guide for non-technical users (students)
 - `final_material_sequence_AorC.xlsx` — randomization / balanced design sequence (the
   per-participant `Full sequence` the app reads; participants are numeric IDs only)
 - `ishihara/` — the two Ishihara color-vision plate images used in the screening
-- `backup/` — earlier versions, kept for reference (see below)
+- `legacy/` — the previous version, v1-d (`ASHRAE-testUIs_v1-d.ipynb` / `.py`)
+- `backup/` — older versions, kept for reference (see below)
 
 ## The setup: laptop + SYLVOX 32" TV
 The participant sits **3.048 m (10 ft)** from a **SYLVOX 32" 1080p outdoor TV**, which they
@@ -27,7 +28,7 @@ connected to the TV by HDMI.
 
 - **Instructions, illuminance entry, the Ishihara plates and the survey** use **Duplicate**
   mode (the laptop and TV show the same picture). The program switches to Duplicate by itself.
-- **The 20/40 acuity screening** splits the screens: the C (and Correct / Incorrect) only on
+- **The 20/20 acuity screening** splits the screens: the C (and Correct / Incorrect) only on
   the TV, four answer arrows on the laptop.
 - **Acuity, contrast and color matching** use **Extend** mode, switched automatically when
   acuity starts and back to Duplicate before the survey:
@@ -68,7 +69,7 @@ On the start screen, choose **Practice (Demo)** to rehearse without touching rea
 
 ## Running (manual / other platforms)
 ```bash
-python "ASHRAE-testUIs_v1-d.py"
+python "ASHRAE-testUIs_v2-d.py"
 ```
 Note: the app uses Windows-only display APIs; display switching and calibration are
 Windows-specific.
@@ -76,9 +77,12 @@ Windows-specific.
 ## Notes
 - Requires Python 3 with `openpyxl` and `pillow` installed (`pip install openpyxl pillow`).
   `Setup.bat` installs both.
-- The pre-session acuity screening is at **20/40** (its results go in the
-  `screening_visual_acuity_20_20_*` columns).
+- The pre-session acuity screening is at **20/20** (set by `SCREENING_ACUITY_DENOMINATOR`).
 - The sun position box accepts a number or `NA`.
+- **Fabric-blind conditions** add a *blind surface uniformity* page: drag the boundaries of
+  the sunlit region on a 36-inch map of the blind and enter the illuminance values.
+- Results: acuity and contrast keep only `Visual acuity failed at` and
+  `Contrast sensitivity failed at_idx`; passing every level is recorded as `Never failed`.
 - `TEST = True` at the top of the program shows a small debug box (test level, etc.) on the
   laptop. Set it to `False` for real sessions.
 - The design spreadsheet and Ishihara images are found relative to the program's own
@@ -86,7 +90,8 @@ Windows-specific.
 - Per-participant **results** files (`participant_<ID>_results.xlsx`) are saved to the
   **Downloads** folder and are **not** committed (`.gitignore` blocks `*.xlsx` there).
 
-## Earlier versions (`backup/`)
+## Earlier versions (`legacy/` and `backup/`)
+- `legacy/` — v1-d, the version before v2-d.
 - `backup/testUIs_v1-c/` — two-screen contrast and color matching (acuity on one screen).
 - `backup/testUIs_v1-b/` — two-screen color matching only.
 - `backup/testUIs_v1/` — first TV version (calibration, Alt+arrows, cursor ring), one screen.
